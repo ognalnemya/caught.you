@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caught You.</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --accent-color: #ff3333;
+            --text-color: #ffffff;
+            --glow-color: rgba(255, 51, 51, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        /* Ambient scanline effect */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 3;
+            padding: 20px;
+        }
+
+        .eye-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 24px;
+            fill: none;
+            stroke: var(--accent-color);
+            stroke-width: 1.5;
+            filter: drop-shadow(0 0 8px var(--glow-color));
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+        }
+
+        p {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #888;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.4s;
+        }
+
+        /* Interactive Tracker Info */
+        .tracker-info {
+            margin-top: 40px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #444;
+            opacity: 0;
+            animation: fadeIn 1.5s ease forward 1s;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px var(--glow-color)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 15px var(--accent-color)); }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Minimalist Eye SVG -->
+        <svg class="eye-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+        </svg>
+
+        <h1>I see u</h1>
+        <p>stalker</p>
+
+        <div class="tracker-info" id="tracker">
+            TARGET LOCATED // LATENCY: <span id="ping">--</span>ms
+        </div>
+    </div>
+
+    <script>
+        // Generates a realistic fluctuating low ping for psychological effect
+        setInterval(() => {
+            const ping = Math.floor(Math.random() * (42 - 12 + 1)) + 12;
+            document.getElementById('ping').innerText = ping;
+        }, 1500);
+
+        // Subtle parallax movement based on mouse/tilt
+        document.addEventListener('mousemove', (e) => {
+            const cx = window.innerWidth / 2;
+            const cy = window.innerHeight / 2;
+            const dx = (e.clientX - cx) / cx;
+            const dy = (e.clientY - cy) / cy;
+            
+            document.querySelector('.container').style.transform = 
+                `rotateX(${-dy * 10}deg) rotateY(${dx * 10}deg)`;
+        });
+    </script>
+</body>
+</html>
